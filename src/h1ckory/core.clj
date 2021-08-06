@@ -37,19 +37,31 @@
     (s/id "maincontent")
     (url-to-hickory url)))
 
+;this one also works for the NY Post
 (defn retrieve-from-federalist
   [url]
   (s/select
     (s/class "entry-content")
     (url-to-hickory url)))
 
-;;re-implement this with a map later
+
+(defn retrieve-from-vox
+  [url]
+  (s/select
+    (s/class "c-entry-content")
+    (url-to-hickory url)))
+
+;re-implement this with a map later
 (defn guardian-retrieve-fragment
   [hickory]
-    (if (= (type hickory) "clojure.lang.PersistentVector") (guardian-retrieve-fragment (first hickory)))
-    (if (= (type hickory) "clojure.lang.PersistentArrayMap") (guardian-retrieve-fragment (get hickory :content)) (type hickory)))
+    (if (= (type hickory) "clojure.lang.PersistentVector") (do guardian-retrieve-fragment (first hickory)))
+    (if (= (type hickory) "clojure.lang.PersistentArrayMap") (do guardian-retrieve-fragment (get hickory :content)) hickory))
 
-
+(defmacro retrieve-fragment
+  [url identifier value]
+  (list s/select
+    (list identifier value)
+    (list url-to-hickory url)))
 
 ;;The next step is to add something between hic-this and retrieve-content to find stuff based on tag name/id/class. Read about map, filter, reduce, and apply in the clojure docs.
 
