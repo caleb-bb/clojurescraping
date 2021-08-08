@@ -24,12 +24,17 @@
 (defn url-to-hiccup [url]
   (-> url
       (get-html)
-      (hicup-this)))
+      (hiccup-this)))
+
+(def tree (url-to-hickory "https://www.theguardian.com/world/2021/aug/06/us-covid-coronavirus-delta-variant"))
 
 (defn retrieve-from-guardian [url]
-  (s/select
-   (s/id "maincontent")
-   (url-to-hickory url)))
+  (def hickory-vec (url-to-hickory url))
+  (for [index (range (count hickory-vec))] (get (nth (s/select (s/tag :p) hickory-vec) index) :content)))
+;  (-> hickory-vec
+;      (s/select (s/tag :p))
+;      (nth 1)
+;      (get :content)))
 
 ;this one also works for the NY Post
 (defn retrieve-from-federalist [url]
