@@ -7,7 +7,7 @@
 (use 'hickory.core)
 
 (defn get-html [url]
-  (get (client/get url) :body))
+    (get (client/get url) :body))
 
 (defn hickory-this [html]
   (as-hickory (parse html)))
@@ -17,13 +17,22 @@
       (get-html)
       (hickory-this)))
 
-(defn retrieve-from-guardian [url]
+(defmacro retrieve-text [url identifier value]
+  (list s/select
+        (list s/descendant
+        (list identifier value))
+        (list url-to-hickory url)))
+
+(defn get-guardian-text [url]
+    (retrieve-text url s/tag :p))
+
+(defn get-guardian-links [url]
   (->> url
        (url-to-hickory)
-       (s/select (s/descendant (s/tag :p)))))
+       (s/select (s/descendant (s/tag :a)))))
 
 ;tree is just a test case for developing the guardian scraper
-(def tree (retrieve-from-guardian "https://www.theguardian.com/world/2021/aug/06/four-areas-where-what-is-known-about-the-covid-virus-has-evolved"))
+(def tree (get-guardian-text "https://www.theguardian.com/world/2021/aug/06/four-areas-where-what-is-known-about-the-covid-virus-has-evolved"))
 
 (defn clean-text [hickory-vect]
   (cond
@@ -49,11 +58,6 @@
 ;   (url-to-hickory url)))
 
 
-(defmacro retrieve-fragment [url identifier value]
-  (list s/select
-        (list identifier value)
-        (list s/descendant)
-        (list url-to-hickory url)))
 
 ;;The next step is to add something between hic-this and retrieve-content to find stuff based on tag name/id/class. Read about map, filter, reduce, and apply in the clojure docs.
 
