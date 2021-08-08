@@ -26,35 +26,38 @@
       (get-html)
       (hiccup-this)))
 
-(def tree (url-to-hickory "https://www.theguardian.com/world/2021/aug/06/us-covid-coronavirus-delta-variant"))
 
 (defn retrieve-from-guardian [url]
-  (def hickory-vec (url-to-hickory url))
-  (for [index (range (count hickory-vec))] (get (nth (s/select (s/tag :p) hickory-vec) index) :content)))
-;  (-> hickory-vec
-;      (s/select (s/tag :p))
-;      (nth 1)
-;      (get :content)))
+  (->> url
+    (url-to-hickory)
+    (s/select (s/descendant (s/tag :p)))))
+
+(def tree (retrieve-from-guardian "https://www.theguardian.com/world/2021/aug/06/four-areas-where-what-is-known-about-the-covid-virus-has-evolved"))
+
+
+(defn clean-text [hickory-vect]
+  (def length
+    (count hickory-vect))
+  (for [index (range 1 length)]
+    (print (get (get hickory-vect index) :content))))
 
 ;this one also works for the NY Post
-(defn retrieve-from-federalist [url]
-  (s/select
-   (s/class "entry-content")
-   (url-to-hickory url)))
+;(defn retrieve-from-federalist [url]
+;  (s/select
+;   (s/descendant 
+;     (s/tag :p))
+;   (url-to-hickory url)))
 
-(defn retrieve-from-vox [url]
-  (s/select
-   (s/class "c-entry-content")
-   (url-to-hickory url)))
+;(defn retrieve-from-vox [url]
+;  (s/select
+;   (s/class "c-entry-content")
+;   (url-to-hickory url)))
 
-;re-implement this with a map later
-(defn guardian-retrieve-fragment [hickory]
-  (if (= (type hickory) "clojure.lang.PersistentVector") (do guardian-retrieve-fragment (first hickory)))
-  (if (= (type hickory) "clojure.lang.PersistentArrayMap") (do guardian-retrieve-fragment (get hickory :content)) hickory))
 
 (defmacro retrieve-fragment [url identifier value]
   (list s/select
         (list identifier value)
+        (list s/descendant)
         (list url-to-hickory url)))
 
 ;;The next step is to add something between hic-this and retrieve-content to find stuff based on tag name/id/class. Read about map, filter, reduce, and apply in the clojure docs.
