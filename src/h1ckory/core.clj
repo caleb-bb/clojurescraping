@@ -28,18 +28,28 @@
 
 
 (defn retrieve-from-guardian [url]
-  (->> url
+ (->> url
     (url-to-hickory)
     (s/select (s/descendant (s/tag :p)))))
 
+;tree is just a test case for developing the guardian scraper
 (def tree (retrieve-from-guardian "https://www.theguardian.com/world/2021/aug/06/four-areas-where-what-is-known-about-the-covid-virus-has-evolved"))
 
 
 (defn clean-text [hickory-vect]
-  (def length
-    (count hickory-vect))
-  (for [index (range 1 length)]
-    (print (get (get hickory-vect index) :content))))
+  (cond
+    (= (type hickory-vect) clojure.lang.PersistentVector) (clean-text (get hickory-vect 0))
+  
+    (= (type hickory-vect) clojure.lang.PersistentArrayMap) (clean-text (get hickory-vect :content))
+    (= (type hickory-vect) java.lang.String) hickory-vect))
+ 
+(defn all-clean-text [hickory-vect]
+  (for [x (range (count hickory-vect))] (clean-text (get hickory-vect x))))
+
+
+
+
+
 
 ;this one also works for the NY Post
 ;(defn retrieve-from-federalist [url]
