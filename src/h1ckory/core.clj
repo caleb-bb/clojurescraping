@@ -27,9 +27,7 @@
     (retrieve-text url s/tag :p))
 
 (defn get-guardian-links [url]
-  (->> url
-       (url-to-hickory)
-       (s/select (s/descendant (s/tag :a)))))
+       (retrieve-text url s/tag :a))
 
 ;tree is just a test case for developing the guardian scraper
 (def tree (get-guardian-text "https://www.theguardian.com/world/2021/aug/06/four-areas-where-what-is-known-about-the-covid-virus-has-evolved"))
