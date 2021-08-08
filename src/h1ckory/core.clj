@@ -4,7 +4,6 @@
 (require '[clojure.string :as string])
 (require '[hickory.select :as s])
 
-(use 'hiccup.core)
 (use 'hickory.core)
 
 (defn get-html [url]
@@ -13,43 +12,29 @@
 (defn hickory-this [html]
   (as-hickory (parse html)))
 
-(defn hiccup-this [html]
-  (as-hiccup (parse html)))
-
 (defn url-to-hickory [url]
   (-> url
       (get-html)
       (hickory-this)))
 
-(defn url-to-hiccup [url]
-  (-> url
-      (get-html)
-      (hiccup-this)))
-
-
 (defn retrieve-from-guardian [url]
- (->> url
-    (url-to-hickory)
-    (s/select (s/descendant (s/tag :p)))))
+  (->> url
+       (url-to-hickory)
+       (s/select (s/descendant (s/tag :p)))))
 
 ;tree is just a test case for developing the guardian scraper
 (def tree (retrieve-from-guardian "https://www.theguardian.com/world/2021/aug/06/four-areas-where-what-is-known-about-the-covid-virus-has-evolved"))
 
-
 (defn clean-text [hickory-vect]
   (cond
     (= (type hickory-vect) clojure.lang.PersistentVector) (clean-text (get hickory-vect 0))
-  
     (= (type hickory-vect) clojure.lang.PersistentArrayMap) (clean-text (get hickory-vect :content))
     (= (type hickory-vect) java.lang.String) hickory-vect))
- 
+
 (defn all-clean-text [hickory-vect]
-  (for [x (range (count hickory-vect))] (clean-text (get hickory-vect x))))
-
-
-
-
-
+  (->> hickory-vect
+       (map clean-text)
+       (apply str)))
 
 ;this one also works for the NY Post
 ;(defn retrieve-from-federalist [url]
