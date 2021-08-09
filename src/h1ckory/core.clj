@@ -17,20 +17,7 @@
       (get-html)
       (hickory-this)))
 
-(defmacro retrieve-text [url identifier value]
-  (list s/select
-        (list s/descendant
-        (list identifier value))
-        (list url-to-hickory url)))
 
-(defn get-guardian-text [url]
-    (retrieve-text url s/tag :p))
-
-(defn get-guardian-links [url]
-       (retrieve-text url s/tag :a))
-
-;tree is just a test case for developing the guardian scraper
-(def tree (get-guardian-text "https://www.theguardian.com/world/2021/aug/06/four-areas-where-what-is-known-about-the-covid-virus-has-evolved"))
 
 (defn clean-text [hickory-vect]
   (cond
@@ -43,21 +30,21 @@
        (map clean-text)
        (apply str)))
 
-;this one also works for the NY Post
-;(defn retrieve-from-federalist [url]
-;  (s/select
-;   (s/descendant 
-;     (s/tag :p))
-;   (url-to-hickory url)))
+(defmacro retrieve-text [url identifier value]
+  (list s/select
+        (list s/descendant
+        (list identifier value))
+        (list url-to-hickory url)))
 
-;(defn retrieve-from-vox [url]
-;  (s/select
-;   (s/class "c-entry-content")
-;   (url-to-hickory url)))
+(defn get-text [url]
+    (->
+     (retrieve-text url s/tag :p)
+     (all-clean-text)))
 
+(defn get-links [url]
+    (->
+       (retrieve-text url s/tag :a)
+       (all-clean-text)))
 
-
-;;The next step is to add something between hic-this and retrieve-content to find stuff based on tag name/id/class. Read about map, filter, reduce, and apply in the clojure docs.
-
-(defn retrieve-content [hicvec]
-  (-> hicvec (flatten) (last)))
+;tree is just a test case for developing the guardian scraper
+(def tree (get-text "https://www.theguardian.com/world/2021/aug/06/four-areas-where-what-is-known-about-the-covid-virus-has-evolved"))
