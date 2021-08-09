@@ -27,8 +27,8 @@
 
 (defn clean-text [hickory-struct]
   (cond
-    (vector? hickory-struct) (clean-text (first hickory-struct))
-    (map? hickory-struct) (clean-text (get hickory-struct :content))
+    (vector? hickory-struct) (recur (first hickory-struct))
+    (map? hickory-struct) (recur (get hickory-struct :content))
     (string? hickory-struct) hickory-struct
     :else  ""))
 
