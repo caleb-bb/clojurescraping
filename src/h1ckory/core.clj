@@ -27,7 +27,7 @@
 
 (defn clean-text [hickory-struct]
   (cond
-    (vector? hickory-struct) (clean-text (get hickory-struct 0))
+    (vector? hickory-struct) (clean-text (first hickory-struct))
     (map? hickory-struct) (clean-text (get hickory-struct :content))
     (string? hickory-struct) hickory-struct
     (nil? hickory-struct)  ""))
@@ -37,19 +37,19 @@
        (map clean-text)
        (apply str)))
 
-(defmacro retrieve-text [url identifier value]
+(defmacro retrieve-text [hickory-struct identifier value]
   (list s/select
         (list s/descendant
         (list identifier value))
-        (list url-to-hickory url)))
+        hickory-struct))
 
-(defn get-text [url]
+(defn get-text [hickory-struct]
     (->
-     (retrieve-text url s/tag :p)
+     (retrieve-text hickory-struct s/tag :p)
      (all-clean-text)))
 
-(defn get-links [url]
+(defn get-links [hickory-struct]
     (->
-       (retrieve-text url s/tag :a)
+       (retrieve-text hickory-struct s/tag :a)
        (all-clean-text)))
 
