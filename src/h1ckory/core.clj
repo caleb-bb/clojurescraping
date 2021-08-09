@@ -30,7 +30,7 @@
     (vector? hickory-struct) (clean-text (first hickory-struct))
     (map? hickory-struct) (clean-text (get hickory-struct :content))
     (string? hickory-struct) hickory-struct
-    (nil? hickory-struct)  ""))
+    :else  ""))
 
 (defn all-clean-text [hickory-struct]
   (->> hickory-struct
