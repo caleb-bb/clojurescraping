@@ -17,13 +17,12 @@
       (get-html)
       (hickory-this)))
 
-
-
 (defn clean-text [hickory-vect]
   (cond
     (= (type hickory-vect) clojure.lang.PersistentVector) (clean-text (get hickory-vect 0))
     (= (type hickory-vect) clojure.lang.PersistentArrayMap) (clean-text (get hickory-vect :content))
-    (= (type hickory-vect) java.lang.String) hickory-vect))
+    (= (type hickory-vect) java.lang.String) hickory-vect
+    (= (type hickory-vect) nil) ""))
 
 (defn all-clean-text [hickory-vect]
   (->> hickory-vect
