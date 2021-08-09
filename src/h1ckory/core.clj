@@ -6,6 +6,18 @@
 
 (use 'hickory.core)
 
+(defn current-date-time []
+     (clojure.string/split (.toString (java.util.Date.)) #" "))
+        
+(defn destruct [six-arity-vec]
+  (let [[_ a b _ _ c] six-arity-vec]
+    [(clojure.string/join [a "."]) (clojure.string/join [b "."]) c]))
+
+(defn generate-filename [date-time domain]
+  (def filename (apply str (destruct (current-date-time))))
+  (clojure.string/join "" [filename "-" domain ".txt"]))
+
+
 (defn get-html [url]
     (get (client/get url) :body))
 
