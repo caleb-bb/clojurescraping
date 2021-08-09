@@ -13,6 +13,7 @@
   (let [[_ a b _ _ c] six-arity-vec]
     [(clojure.string/join [a "."]) (clojure.string/join [b "."]) c]))
 
+;e.g. generate-filename((current-date-time "NYT"))
 (defn generate-filename [date-time domain]
   (def filename (apply str (destruct (current-date-time))))
   (clojure.string/join "" [filename "-" domain ".txt"]))
