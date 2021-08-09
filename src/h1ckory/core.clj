@@ -45,5 +45,3 @@
        (retrieve-text url s/tag :a)
        (all-clean-text)))
 
-;tree is just a test case for developing the guardian scraper
-(def tree (get-text "https://www.theguardian.com/world/2021/aug/06/four-areas-where-what-is-known-about-the-covid-virus-has-evolved"))
