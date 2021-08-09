@@ -12,7 +12,7 @@
     (java.util.Date.)))
 
 (defn generate-filename [domain]
-  (clojure.string/join "" [(current-date) domain]))
+  (clojure.string/join "" [(current-date) "-"  domain]))
 
 (defn get-html [url]
     (get (client/get url) :body))
@@ -25,15 +25,15 @@
       (get-html)
       (hickory-this)))
 
-(defn clean-text [hickory-vect]
+(defn clean-text [hickory-struct]
   (cond
-    (= (type hickory-vect) clojure.lang.PersistentVector) (clean-text (get hickory-vect 0))
-    (= (type hickory-vect) clojure.lang.PersistentArrayMap) (clean-text (get hickory-vect :content))
-    (= (type hickory-vect) java.lang.String) hickory-vect
-    (= (type hickory-vect) nil) ""))
+    (vector? hickory-struct) (clean-text (get hickory-struct 0))
+    (map? hickory-struct) (clean-text (get hickory-struct :content))
+    (string? hickory-struct) hickory-struct
+    (nil? hickory-struct)  ""))
 
-(defn all-clean-text [hickory-vect]
-  (->> hickory-vect
+(defn all-clean-text [hickory-struct]
+  (->> hickory-struct
        (map clean-text)
        (apply str)))
 
