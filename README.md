@@ -4,6 +4,17 @@ A Clojure library designed to ... well, that part is up to you.
 
 ## Usage
 
+## Required Data
+
+data structure containing articles and their links between date A and date B (likely sorted by date)
+
+ability to scrape articles
+
+ability to save scraped articles according to a YYYY-MM-DD-PUB-metadata?-title or some such format
+
+modify word frequency to account for different versions of a word, e.g. Trump, Trump's; Scrape, Scraping, Scraped; and so-on
+
+
 ## Supported Publications
 
 
