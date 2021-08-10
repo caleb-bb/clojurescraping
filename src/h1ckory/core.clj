@@ -61,7 +61,17 @@
        (map clojure.string/lower-case)
        (remove commonwords)
        (frequencies)))
+
+(defn n-most-common [mapped-text n]
+  (->> mapped-text
+       (sort-by val)
+       (reverse)
+       (take n)))
+
+(defn top-ten [mapped-text]
+  (n-most-common mapped-text 10))
+
 ;these are just some pre-defined values for use in the REPL when testing/developing
-(def url "https://www.nytimes.com/2021/07/24/us/covid-vaccine-hesitant.html")
+(def url "https://www.nytimes.com/2021/08/10/nyregion/andrew-cuomo-resigns.html")
 (def hick-struct (url-to-hickory url))
 (def scraped (get-text hick-struct))
