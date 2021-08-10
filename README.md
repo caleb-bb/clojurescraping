@@ -4,19 +4,57 @@ A Clojure library designed to ... well, that part is up to you.
 
 ## Usage
 
-FIXME
+## Supported Publications
+
+TODO: Put this into a priority order.
+ABC News
+AlterNet
+AP Politics & Fact Check
+Associated Press
+Axios
+BBC News
+Bloomberg
+Breitbart News
+BuzzFeed News
+CBS News
+Christian Science Monitor
+CNN
+Daily Beast
+Daily Mail
+Democracy Now
+Forbes
+Fox News
+HuffPost
+Mother Jones
+MSNBC
+National Review
+NBC News
+New York Post
+New York Times
+NPR
+Politico
+Reason
+Reuters
+Slate
+The American Spectator
+The Atlantic
+The Daily Caller
+The Daily Wire
+The Economist
+The Epoch Times
+The Federalist
+The Guardian
+The Hill
+The Intercept
+The New Yorker
+The Blaze
+Time Magazine
+USA Today
+Vox
+Wall Street Journal
+Washington Examiner
+Washington Post
+Washington Times
 
 ## License
-
-Copyright © 2021 FIXME
-
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+Copyright © 2021
