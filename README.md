@@ -6,55 +6,41 @@ A Clojure library designed to ... well, that part is up to you.
 
 ## Supported Publications
 
-TODO: Put this into a priority order.
-ABC News
-AlterNet
-AP Politics & Fact Check
-Associated Press
-Axios
-BBC News
-Bloomberg
-Breitbart News
-BuzzFeed News
-CBS News
-Christian Science Monitor
-CNN
-Daily Beast
-Daily Mail
-Democracy Now
-Forbes
-Fox News
-HuffPost
-Mother Jones
-MSNBC
-National Review
-NBC News
-New York Post
+
 New York Times
-NPR
-Politico
-Reason
-Reuters
-Slate
-The American Spectator
-The Atlantic
-The Daily Caller
-The Daily Wire
-The Economist
-The Epoch Times
-The Federalist
-The Guardian
-The Hill
-The Intercept
-The New Yorker
-The Blaze
+CNN
+BBC News
 Time Magazine
-USA Today
-Vox
-Wall Street Journal
-Washington Examiner
+Fox News
+^THESE ONES FIRST
+HuffPost
 Washington Post
-Washington Times
+Wall Street Journal
+The Guardian
+MSNBC
+Bloomberg
+BuzzFeed News
+Daily Beast
+Forbes
+The Federalist
+Reuters
+Vox
+NPR
+NBC News
+ABC News
+CBS News
+The Atlantic
+The Economist
+The Hill
+Slate
+Reason
+AP Politics & Fact Check
+Daily Mail
+Associated Press
+Breitbart News
+
+
+TODO: Put this into a priority order.
 
 ## License
 Copyright © 2021
