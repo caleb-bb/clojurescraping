@@ -71,10 +71,10 @@
       (get :href)))
 
 (defn extract-date-from-url [raw-url]
-  (->> (clojure.string/split raw-url #"/")
-       (rest)
-       (take 3)
-       (clojure.string/join "-")))
+  (as-> raw-url X
+       (clojure.string/split X  #"/")
+       (subvec X 1 4)
+       (clojure.string/join "-" X)))
 
 (defn complete-url [incomplete-url]
   (->> incomplete-url
