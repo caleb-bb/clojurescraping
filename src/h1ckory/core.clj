@@ -34,10 +34,10 @@
     (string? hickory-struct) hickory-struct
     :else  ""))
 
-(defn all-clean-text [hickory-struct]
+(defn all-clean-text [hickory-struct separator]
   (->> hickory-struct
        (map clean-text)
-       (string/join " ")))
+       (string/join separator)))
 
 (defmacro retrieve-text [hickory-struct identifier value]
   (list s/select
@@ -48,12 +48,14 @@
 (defn get-text [hickory-struct]
   (->
    (retrieve-text hickory-struct s/tag :p)
-   (all-clean-text)))
+   (all-clean-text " ")))
 
 (defn get-links [hickory-struct]
-  (->
-   (retrieve-text hickory-struct s/tag :a)
-   (all-clean-text)))
+  (remove clojure.string/blank?
+          (->
+           (retrieve-text hickory-struct s/tag :a)
+           (all-clean-text "!!!!!")
+           (clojure.string/split #"!!!!!"))))
 
 (defn freq-map [gotten-text]
   (->> gotten-text

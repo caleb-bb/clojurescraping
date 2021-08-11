@@ -23,7 +23,6 @@ CNN
 BBC News
 Time Magazine
 Fox News
-^THESE ONES FIRST
 HuffPost
 Washington Post
 Wall Street Journal
@@ -49,9 +48,6 @@ AP Politics & Fact Check
 Daily Mail
 Associated Press
 Breitbart News
-
-
-TODO: Put this into a priority order.
 
 ## License
 Copyright © 2021
