@@ -66,8 +66,7 @@
 
 (defn n-most-common [mapped-text n]
   (->> mapped-text
-       (sort-by val)
-       (reverse)
+       (sort-by val #(compare %2 %1))
        (take n)))
 
 (defn top-ten [mapped-text]
