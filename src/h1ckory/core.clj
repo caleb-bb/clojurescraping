@@ -37,6 +37,12 @@
       (get-html)
       (hickory-this)))
 
+;;not sure how to implement this yet...
+(defn article-map [filenames links]
+  (-> filenames
+      (sort)
+      (zipmap links)))
+
 (defn clean-text [hickory-struct]
   (cond
     (vector? hickory-struct) (recur (first hickory-struct))
