@@ -70,6 +70,12 @@
       (get :attrs)
       (get :href)))
 
+(defn extract-date-from-url [raw-url]
+  (->> (clojure.string/split raw-url #"/")
+       (rest)
+       (take 3)
+       (clojure.string/join "-")))
+
 (defn complete-url [incomplete-url]
   (->> incomplete-url
        (vector "https://www.nytimes.com")
@@ -104,4 +110,4 @@
 (def url "https://www.nytimes.com/search?dropmab=true&endDate=20200801&query=&sort=best&startDate=20200401")
 (def hick-struct (url-to-hickory url))
 (def scraped (get-text hick-struct))
-(def lynx (retrieve-text (url-to-hickory "https://www.nytimes.com/search?dropmab=true&endDate=20200801&query=&sort=best&startDate=20200401") s/tag :a))
+(def lynx (map get-url (retrieve-text hick-struct s/tag :a)))
