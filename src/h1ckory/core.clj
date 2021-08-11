@@ -13,8 +13,8 @@
    (new java.text.SimpleDateFormat "yyyy-MM")
    (java.util.Date.)))
 
-(defn generate-filename [domain]
-  (clojure.string/join "" [(current-date) "-"  domain]))
+(defn generate-filename [date domain title]
+  (clojure.string/join "" [date "-"  domain "-" title ".txt"]))
 
 (defn get-html [url]
   (get (client/get url) :body))
@@ -50,12 +50,40 @@
    (retrieve-text hickory-struct s/tag :p)
    (all-clean-text " ")))
 
-(defn get-links [hickory-struct]
-  (remove clojure.string/blank?
-          (->
-           (retrieve-text hickory-struct s/tag :a)
-           (all-clean-text "!!!!!")
-           (clojure.string/split #"!!!!!"))))
+(defn get-title-vec [hickory-struct]
+  (->
+   (retrieve-text hickory-struct s/tag :a)
+   (all-clean-text "!!!!!")
+   (clojure.string/replace #" " "_")
+   (clojure.string/split #"!!!!!")))
+
+(defn get-domain-vec [domain-name length]
+  (->> domain-name
+       (repeat length)
+       (vec)))
+
+(defn get-filename-vec [date-vec domain-vec title-vec]
+  (map generate-filename date-vec domain-vec title-vec))
+
+(defn get-url [item]
+  (-> item
+      (get :attrs)
+      (get :href)))
+
+(defn complete-url [incomplete-url]
+  (->> incomplete-url
+       (vector "https://www.nytimes.com")
+       (clojure.string/join)))
+
+(defn clean-url [raw-url]
+  (-> raw-url
+      (clojure.string/split #"\?")
+      (first)))
+
+(defn finished-url [raw-url]
+  (-> raw-url
+      (complete-url)
+      (clean-url)))
 
 (defn freq-map [gotten-text]
   (->> gotten-text
@@ -73,6 +101,7 @@
   (n-most-common mapped-text 10))
 
 ;these are just some pre-defined values for use in the REPL when testing/developing
-(def url "https://www.nytimes.com/2021/08/10/nyregion/andrew-cuomo-resigns.html")
+(def url "https://www.nytimes.com/search?dropmab=true&endDate=20200801&query=&sort=best&startDate=20200401")
 (def hick-struct (url-to-hickory url))
 (def scraped (get-text hick-struct))
+(def lynx (retrieve-text (url-to-hickory "https://www.nytimes.com/search?dropmab=true&endDate=20200801&query=&sort=best&startDate=20200401") s/tag :a))
