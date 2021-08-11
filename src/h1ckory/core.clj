@@ -16,8 +16,18 @@
 (defn generate-filename [date domain title]
   (clojure.string/join "" [date "-"  domain "-" title ".txt"]))
 
+(defn save-article [date domain title text]
+  (def filename (generate-filename date domain title))
+  (spit filename text))
+
 (defn get-html [url]
   (get (client/get url) :body))
+
+(defn nyt-get-html [params]
+  (as-> params p
+        (clojure.string/join ["https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" p "&api-key=wGNUhgyB28zUKs7VIfyy4mjuQm3EPXMN"])
+        (client/get p)
+        (get p :body)))
 
 (defn hickory-this [html]
   (as-hickory (parse html)))
@@ -72,9 +82,9 @@
 
 (defn extract-date-from-url [raw-url]
   (as-> raw-url X
-       (clojure.string/split X  #"/")
-       (subvec X 1 4)
-       (clojure.string/join "-" X)))
+        (clojure.string/split X  #"/")
+        (subvec X 1 4)
+        (clojure.string/join "-" X)))
 
 (defn complete-url [incomplete-url]
   (->> incomplete-url
