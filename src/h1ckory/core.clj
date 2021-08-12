@@ -8,6 +8,10 @@
 
 (def commonwords #{"" "the" "of" "and" "a" "to" "in" "is" "you" "that" "it" "he" "was" "for" "on" "are" "as" "with" "his" "they" "I" "at" "be" "this" "have" "from" "or" "one" "had" "by" "word" "but" "not" "what" "all" "were" "we" "when" "your" "can" "said" "there" "use" "an" "each" "which" "she" "do" "how" "their" "if" "will" "up" "other" "about" "out" "many" "then" "them" "these" "so" "some" "her" "would" "make" "like" "him" "into" "time" "has" "look" "two" "more" "write" "go" "see" "number" "no" "way" "could" "people" "my" "than" "first" "water" "been" "call" "who" "oil" "its" "now" "find" "long" "down" "day" "did" "get" "come" "made" "may" "part"})
 
+;This is just for sheer convenience in using the REPL
+(defn reload []
+  (require 'h1ckory.core :reload))
+
 (defn current-date []
   (.format
    (new java.text.SimpleDateFormat "yyyy-MM")
@@ -23,11 +27,29 @@
 (defn get-html [url]
   (get (client/get url) :body))
 
-(defn nyt-get-html [params]
-  (as-> params p
-        (clojure.string/join ["https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" p "&api-key=wGNUhgyB28zUKs7VIfyy4mjuQm3EPXMN"])
-        (client/get p)
-        (get p :body)))
+(defn quote-string [some-string]
+  (clojure.string/join [\" some-string \"]))
+
+;here begins all the NYT stuff
+
+(defn filter-query [fieldname value-vec]
+  (as-> value-vec V
+        (map quote-string V)
+        (clojure.string/join " " V)
+        (clojure.string/join [fieldname ":(" V ")"])))
+
+(defn nyt-dates [YYYYMMDD-begin YYYYMMDD-end]
+  (clojure.string/join ["&begin_date=" YYYYMMDD-begin "&end_date=" YYYYMMDD-end]))
+
+(defn nyt-build-query [query-vec]
+  (as-> query-vec q
+        (clojure.string/join q)
+        (clojure.string/join ["https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" q "&api-key=wGNUhgyB28zUKs7VIfyy4mjuQm3EPXMN"])))
+
+(defn nyt-get [query]
+  (client/get query))
+
+;here ends all the NYT stuff
 
 (defn hickory-this [html]
   (as-hickory (parse html)))
@@ -85,27 +107,6 @@
   (-> item
       (get :attrs)
       (get :href)))
-
-(defn extract-date-from-url [raw-url]
-  (as-> raw-url X
-        (clojure.string/split X  #"/")
-        (subvec X 1 4)
-        (clojure.string/join "-" X)))
-
-(defn complete-url [incomplete-url]
-  (->> incomplete-url
-       (vector "https://www.nytimes.com")
-       (clojure.string/join)))
-
-(defn clean-url [raw-url]
-  (-> raw-url
-      (clojure.string/split #"\?")
-      (first)))
-
-(defn finished-url [raw-url]
-  (-> raw-url
-      (complete-url)
-      (clean-url)))
 
 (defn freq-map [gotten-text]
   (->> gotten-text
