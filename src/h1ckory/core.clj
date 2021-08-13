@@ -18,7 +18,7 @@
    (java.util.Date.)))
 
 (defn generate-filename [date domain title]
-  (clojure.string/join "" [date "-"  domain "-" title ".txt"]))
+  (string/join "" [date "-"  domain "-" title ".txt"]))
 
 (defn save-article [date domain title text]
   (def filename (generate-filename date domain title))
@@ -28,23 +28,23 @@
   (get (client/get url) :body))
 
 (defn quote-string [some-string]
-  (clojure.string/join [\" some-string \"]))
+  (string/join [\" some-string \"]))
 
 ;here begins all the NYT stuff
 
 (defn filter-query [fieldname value-vec]
   (as-> value-vec V
         (map quote-string V)
-        (clojure.string/join " " V)
-        (clojure.string/join [fieldname ":(" V ")"])))
+        (string/join " " V)
+        (string/join [fieldname ":(" V ")"])))
 
 (defn nyt-dates [YYYYMMDD-begin YYYYMMDD-end]
-  (clojure.string/join ["&begin_date=" YYYYMMDD-begin "&end_date=" YYYYMMDD-end]))
+  (string/join ["&begin_date=" YYYYMMDD-begin "&end_date=" YYYYMMDD-end]))
 
 (defn nyt-build-query [query-vec]
-  (as-> query-vec q
-        (clojure.string/join q)
-        (clojure.string/join ["https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" q "&api-key=wGNUhgyB28zUKs7VIfyy4mjuQm3EPXMN"])))
+  (as-> query-vec Q
+        (string/join Q)
+        (string/join ["https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" Q "&api-key=wGNUhgyB28zUKs7VIfyy4mjuQm3EPXMN"])))
 
 (defn nyt-get [query]
   (client/get query))
@@ -92,8 +92,8 @@
   (->
    (retrieve-text hickory-struct s/tag :a)
    (all-clean-text "!!!!!")
-   (clojure.string/replace #" " "_")
-   (clojure.string/split #"!!!!!")))
+   (string/replace #" " "_")
+   (string/split #"!!!!!")))
 
 (defn get-domain-vec [domain-name length]
   (->> domain-name
@@ -111,7 +111,7 @@
 (defn freq-map [gotten-text]
   (->> gotten-text
        (re-seq #"[\w|’|']*")
-       (map clojure.string/lower-case)
+       (map string/lower-case)
        (remove commonwords)
        (frequencies)))
 
