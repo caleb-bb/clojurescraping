@@ -41,6 +41,9 @@
 (defn nyt-dates [YYYYMMDD-begin YYYYMMDD-end]
   (string/join ["&begin_date=" YYYYMMDD-begin "&end_date=" YYYYMMDD-end]))
 
+(defn nyt-facets [facet]
+  (string/join ["facet_fields=" facet]))
+
 (defn nyt-build-query [query-vec]
   (as-> query-vec Q
         (string/join "&" Q)
