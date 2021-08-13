@@ -43,7 +43,8 @@
 
 (defn nyt-build-query [query-vec]
   (as-> query-vec Q
-        (string/join Q)
+        (string/join "&" Q)
+        (string/replace "&&" "&")
         (string/join ["https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" Q "&api-key=wGNUhgyB28zUKs7VIfyy4mjuQm3EPXMN"])))
 
 (defn nyt-get [query]
