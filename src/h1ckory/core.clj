@@ -24,13 +24,13 @@
   (def filename (generate-filename date domain title))
   (spit filename text))
 
+;NYT stuff
+
 (defn get-html [url]
   (get (client/get url) :body))
 
 (defn quote-string [some-string]
   (string/join [\" some-string \"]))
-
-;here begins all the NYT stuff
 
 (defn filter-query [fieldname value-vec]
   (as-> value-vec V
@@ -75,10 +75,9 @@
       (hickory-this)))
 
 ;;not sure how to implement this yet...
-(defn article-map [filenames links]
-  (-> filenames
-      (sort)
-      (zipmap links)))
+(defn leaves [x]
+  (filter (complement coll?)
+          (rest (tree-seq coll? identity x))))
 
 (defn clean-text [hickory-struct]
   (cond
@@ -103,6 +102,13 @@
   (->
    (retrieve-text hickory-struct s/tag :p)
    (all-clean-text " ")))
+
+(defn get-span-text [hickory-struct]
+  (->
+   (retrieve-text hickory-struct s/tag :span)
+   (all-clean-text " ")))
+
+
 
 (defn get-title-vec [hickory-struct]
   (->
