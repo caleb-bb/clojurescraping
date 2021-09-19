@@ -34,9 +34,9 @@
 
 (defn filter-query [fieldname value-vec]
   (as-> value-vec V
-        (map quote-string V)
-        (string/join " " V)
-        (string/join [fieldname ":(" V ")"])))
+    (map quote-string V)
+    (string/join " " V)
+    (string/join [fieldname ":(" V ")"])))
 
 (defn nyt-dates [YYYYMMDD-begin YYYYMMDD-end]
   (string/join ["&begin_date=" YYYYMMDD-begin "&end_date=" YYYYMMDD-end]))
@@ -46,17 +46,17 @@
 
 (defn nyt-build-query [query-vec]
   (as-> query-vec Q
-        (string/join "&" Q)
-        (string/replace Q "&&" "&")
-        (string/join ["https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" Q "&api-key=wGNUhgyB28zUKs7VIfyy4mjuQm3EPXMN"])))
+    (string/join "&" Q)
+    (string/replace Q "&&" "&")
+    (string/join ["https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" Q "&api-key=wGNUhgyB28zUKs7VIfyy4mjuQm3EPXMN"])))
 
 (defn nyt-get [query]
   (client/get query))
 
 (defn links-from-json [json-response]
   (as-> json-response J
-        (get J :body)
-        (re-seq #"https[^\"]*" J)))
+    (get J :body)
+    (re-seq #"https[^\"]*" J)))
 
 (defn search-1st [query]
   (-> query
@@ -98,17 +98,32 @@
               (list identifier value))
         hickory-struct))
 
-(defn get-text [hickory-struct]
+(defn get-tag-p [hickory-struct]
   (->
    (retrieve-text hickory-struct s/tag :p)
    (all-clean-text " ")))
 
-(defn get-span-text [hickory-struct]
+(defn get-tag-span [hickory-struct]
   (->
    (retrieve-text hickory-struct s/tag :span)
    (all-clean-text " ")))
 
+(def func-map {"nytimes" get-tag-p
+               "hopelutheransunbury" get-tag-span})
 
+(defn extract-domain [url]
+  (->> url
+       (re-find #"https://(www.)+([^.]*)")
+       (last)))
+
+(defn domain-func [url]
+  (let [domain (extract-domain url)]
+    (get func-map domain)))
+
+(defn url-to-text [url]
+  (let [hickory (url-to-hickory url)
+        function (domain-func url)]
+    (function hickory)))
 
 (defn get-title-vec [hickory-struct]
   (->
@@ -148,7 +163,7 @@
 ;these are just some pre-defined values for use in the REPL when testing/developing
 (def url "https://www.nytimes.com/search?dropmab=true&endDate=20200801&query=&sort=best&startDate=20200401")
 (def hick-struct (url-to-hickory url))
-(def scraped (get-text hick-struct))
+(def scraped (get-tag-p hick-struct))
 (def lynx (map get-url (retrieve-text hick-struct s/tag :a)))
 (def nyt-req (nyt-build-query ""))
 (def nyt-resp (nyt-get nyt-req))
