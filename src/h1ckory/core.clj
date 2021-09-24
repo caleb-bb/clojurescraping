@@ -109,7 +109,8 @@
 
 (def func-map {"nytimes" get-tag-p
                "hopelutheransunbury" get-tag-span
-               "thefederalist" get-tag-p})
+               "thefederalist" get-tag-p
+               "theguardian" get-tag-p})
 
 (defn extract-domain [url]
   (->> url
