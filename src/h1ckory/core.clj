@@ -1,6 +1,5 @@
-(ns h1ckory.core)
-
-(require '[clj-http.lite.client :as client])
+(ns h1ckory.core
+(:require [clj-http.client :as client]))
 (require '[clojure.string :as string])
 (require '[hickory.select :as s])
 
@@ -109,11 +108,12 @@
    (all-clean-text " ")))
 
 (def func-map {"nytimes" get-tag-p
-               "hopelutheransunbury" get-tag-span})
+               "hopelutheransunbury" get-tag-span
+               "thefederalist" get-tag-p})
 
 (defn extract-domain [url]
   (->> url
-       (re-find #"https://(www.)+([^.]*)")
+       (re-find #"https://(www.)?([^.]*)")
        (last)))
 
 (defn domain-func [url]

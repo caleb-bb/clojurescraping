@@ -5,6 +5,6 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.0"] 
                  [hickory "0.7.1"]
-                 [org.martinklepsch/clj-http-lite "0.4.3"]
+                 [clj-http "3.12.3"]
                  [hiccup "1.0.5"]]
   :repl-options {:init-ns h1ckory.core})
